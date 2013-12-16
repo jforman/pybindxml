@@ -33,11 +33,11 @@ class BindXmlReader(object):
             self.bs_xml = BeautifulSoup(self.raw_xml)
         else:
             try:
-                req = urllib2.urlopen("http://%s:%s" % (self.host, self.port))
+                req = urllib2.urlopen('http://%s:%s' % (self.host, self.port))
                 self.raw_xml = req.read()
-                self.bs_xml = BeautifulSoup(self.raw_xml, "xml")
+                self.bs_xml = BeautifulSoup(self.raw_xml, 'xml')
             except urllib2.URLError, u_error:
-                raise XmlError("Unable to query BIND (%s) for statistics. Reason: %s.",
+                raise XmlError('Unable to query BIND (%s) for statistics. Reason: %s.',
                                self.host,
                                u_error)
 
@@ -49,19 +49,19 @@ class BindXmlReader(object):
         """ Run this after init'ing to attempt to read XML and determine version
         of XML for later processing."""
         self.get_xml()
-        self.xml_version = self.bs_xml.find("statistics")['version']
+        self.xml_version = self.bs_xml.find('statistics')['version']
         
         if self.xml_version is None:
             raise XmlError("Unable to determine XML version via 'statistics' tag.")
 
     def get_xml_stats(self):
         """ Given XML version, parse create XMLAbstract object and sets xml_stats attribute."""
-        if self.xml_version == "2.2":
+        if self.xml_version == '2.2':
             self.xml_stats = XmlV22(self.bs_xml)
-        elif self.xml_version == "3.0":
+        elif self.xml_version == '3.0':
             self.xml_stats = XmlV30(self.bs_xml)
         else:
-            raise XmlError("Not configured to handle XML version %s." % self.xml_version)
+            raise XmlError('Not configured to handle XML version %s.' % self.xml_version)
 
 
 class XmlAbstract(object):
@@ -78,7 +78,7 @@ class XmlAbstract(object):
         Returns:
         Dict { memory_counter: Int value in bytes }
         """
-        raise NotImplementedError("You must implement your own GetMemoryStats method.")
+        raise NotImplementedError('You must implement your own get_memory_stats method.')
 
     def get_query_stats(self):
         """ Return a dict of query type and count from BIND statistics XML.
@@ -86,7 +86,7 @@ class XmlAbstract(object):
         Returns:
         Dict { query_type: Integer count }
         """
-        raise NotImplementedError("You must implement your own GetQueryStats method.")
+        raise NotImplementedError('You must implement your own get_query_stats method.')
 
     def get_zone_stats(self):
         """ List the DNS zones and attributes.
@@ -98,7 +98,7 @@ class XmlAbstract(object):
         Int serial,
         Dict counters (which contains key/values for all counter values}
         """
-        raise NotImplementedError("You must implement your own GetZoneStats method.")
+        raise NotImplementedError('You must implement your own get_zone_stats method.')
 
 
 class XmlV22(XmlAbstract):
@@ -136,25 +136,25 @@ class XmlV22(XmlAbstract):
 
     def get_zone_stats(self):
         zone_list = []
-        views = self.bs_xml.find("views").find_all("view")
+        views = self.bs_xml.find('views').find_all('view')
         for view in views:
-            view_name = view.find("name").string
-            for zone in view.findAll("zone"):
-                zone_name, zone_class = zone.find("name").string.split("/")
-                serial = int(zone.find("serial").string)
+            view_name = view.find('name').string
+            for zone in view.findAll('zone'):
+                zone_name, zone_class = zone.find('name').string.split('/')
+                serial = int(zone.find('serial').string)
                 zone_dict = {}
-                if zone_class != "IN":
+                if zone_class != 'IN':
                     continue
-                zone_dict.update({"view" : view_name,
-                                  "zone" : zone_name,
-                                  "class" : zone_class,
-                                  "serial" : serial })
-                zone_dict["counters"] = {}
-                counters = zone.find("counters")
+                zone_dict.update({'view' : view_name,
+                                  'zone' : zone_name,
+                                  'class' : zone_class,
+                                  'serial' : serial })
+                zone_dict['counters'] = {}
+                counters = zone.find('counters')
                 for counter in counters.children:
                     if counter == u'\n':
                         continue
-                    zone_dict["counters"][counter.name] = counter.string
+                    zone_dict['counters'][counter.name] = counter.string
                 zone_list.append(zone_dict)
             
         return zone_list
@@ -163,3 +163,41 @@ class XmlV30(XmlAbstract):
     """Class for implementing methods for parsing BIND version 3.0 XML."""
     def __init__(self, xml):
         super(self.__class__, self).__init__(xml)
+
+    def get_memory_stats(self):
+        stats_dict = {}
+        stats = self.bs_xml.find('memory').find('summary')
+        for stat in stats.contents:
+            if stat == u'\n':
+                continue
+            if stat:
+                stats_dict[stat.name] = int(stat.string)
+
+        return stats_dict
+
+    def get_query_stats(self):
+        stats_dict = {}
+        stats = self.bs_xml.find('server')
+        for stat in stats.find(type='qtype'):
+            stats_dict[stat['name']] = int(stat.string)
+        for stat in stats.find(type='opcode'):
+            stats_dict[stat['name']] = int(stat.string)
+
+        return stats_dict
+
+    def get_zone_stats(self):
+        zone_list = []
+        views = self.bs_xml.find('views')
+        for view in views:
+            for zone in view.find_all(rdataclass='IN'):
+                zone_dict = {}
+                zone_dict.update({'view': view['name'],
+                                  'zone': zone['name'],
+                                  'serial': zone.find('serial').string})
+                zone_dict['counters'] = {}
+                counters = zone.find_all('counter')
+                for counter in counters:
+                    zone_dict['counters'][counter['name']] = int(counter.string)
+                zone_list.append(zone_dict)
+
+        return zone_list
