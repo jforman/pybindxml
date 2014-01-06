@@ -13,7 +13,6 @@ class Tests_v30(unittest.TestCase):
     
     def test_ExpectedZoneCount(self):
         """Ensure we are parsing the expected number of zones in the XML file."""
-        zone_list = self.xml_obj.stats.zone_stats
         self.assertEqual(len(self.xml_obj.stats.zone_stats.keys()), 104)
         
     def test_ZoneStats(self):
