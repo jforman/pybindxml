@@ -36,9 +36,8 @@ class BindXmlReader(object):
                 self.raw_xml = req.read()
                 self.bs_xml = BeautifulSoup(self.raw_xml, 'xml')
             except urllib2.URLError, u_error:
-                raise XmlError('Unable to query BIND (%s) for statistics. Reason: %s.',
-                               self.host,
-                               u_error)
+                raise XmlError('Unable to query BIND (%s:%s) for statistics. Reason: %s.' %
+                               (self.host, self.port, u_error))
 
     def get_stats(self):
         """ Given XML version, parse create XMLAbstract object and sets xml_stats attribute."""
