@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 # add dependency for python-bs4
 
@@ -10,5 +10,6 @@ setup(
     author_email='code@jeffreyforman.net',
     license='MIT',
     packages = ['pybindxml'],
-    url = 'https://github.com/jforman/pybindxml',
+    url = 'http:://github.com/jforman/pybindxml',
+    install_requires = ['bs4.BeautifulSoup'],
 )
