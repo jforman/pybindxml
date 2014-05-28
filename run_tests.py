@@ -9,6 +9,6 @@ sys.path.insert(0, os.path.dirname(__file__) + "/pybindxml")
 
 loader = unittest.TestLoader()
 tests = loader.discover("tests")
-runner = unittest.runner.TextTestRunner()
+runner = unittest.runner.TextTestRunner(verbosity=2)
 runner.run(tests)
  

@@ -51,6 +51,8 @@ class BindXmlReader(object):
             self.stats = XmlV22(self.bs_xml)
         elif self.xml_version == '3.0':
             self.stats = XmlV30(self.bs_xml)
+        elif self.xml_version == '3.3':
+            self.stats = XmlV33(self.bs_xml)
         else:
             raise XmlError('Support must be added before being able to support newly-encountered XML version %s.' % self.xml_version)
 
@@ -95,7 +97,7 @@ class XmlAbstract(object):
 class XmlV22(XmlAbstract):
     """Class for implementing methods for parsing BIND version 2.2 XML."""
     def __init__(self, xml):
-        super(self.__class__, self).__init__(xml)
+        super(XmlV22, self).__init__(xml)
 
     def set_memory_stats(self):
         stats_dict = {}
@@ -153,7 +155,7 @@ class XmlV22(XmlAbstract):
 class XmlV30(XmlAbstract):
     """Class for implementing methods for parsing BIND version 3.0 XML."""
     def __init__(self, xml):
-        super(self.__class__, self).__init__(xml)
+        super(XmlV30, self).__init__(xml)
 
     def set_memory_stats(self):
         stats_dict = {}
@@ -201,3 +203,9 @@ class XmlV30(XmlAbstract):
                                 'type': counter_type['type'],
                                 'value': int(counter.string)})
         return zone_dict
+
+
+class XmlV33(XmlV30):
+    """Class for implementing methods for parsing BIND version 3.3 XML."""
+    def __init__(self, xml):
+        super(XmlV33, self).__init__(xml)
