@@ -1,7 +1,5 @@
 from setuptools import setup
 
-# add dependency for python-bs4
-
 setup(
     name='pybindxml',
     version = '0.2',
@@ -11,5 +9,5 @@ setup(
     license='MIT',
     packages = ['pybindxml'],
     url = 'http:://github.com/jforman/pybindxml',
-    install_requires = ['bs4.BeautifulSoup'],
+    install_requires = ['beautifulsoup4','lxml'],
 )

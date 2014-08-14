@@ -51,6 +51,49 @@
               </counters>
             </zone>
             <zone>
+              <name>0.20.10.in-addr.arpa/IN/VIEW1</name>
+              <rdataclass>IN</rdataclass>
+              <serial>170</serial>
+              <counters>
+                <Requestv4>0</Requestv4>
+                <Requestv6>0</Requestv6>
+                <ReqEdns0>0</ReqEdns0>
+                <ReqBadEDNSVer>0</ReqBadEDNSVer>
+                <ReqTSIG>0</ReqTSIG>
+                <ReqSIG0>0</ReqSIG0>
+                <ReqBadSIG>0</ReqBadSIG>
+                <ReqTCP>0</ReqTCP>
+                <AuthQryRej>0</AuthQryRej>
+                <RecQryRej>0</RecQryRej>
+                <XfrRej>0</XfrRej>
+                <UpdateRej>0</UpdateRej>
+                <Response>0</Response>
+                <TruncatedResp>0</TruncatedResp>
+                <RespEDNS0>0</RespEDNS0>
+                <RespTSIG>0</RespTSIG>
+                <RespSIG0>0</RespSIG0>
+                <QrySuccess>1025</QrySuccess>
+                <QryAuthAns>59559</QryAuthAns>
+                <QryNoauthAns>0</QryNoauthAns>
+                <QryReferral>0</QryReferral>
+                <QryNxrrset>0</QryNxrrset>
+                <QrySERVFAIL>0</QrySERVFAIL>
+                <QryFORMERR>0</QryFORMERR>
+                <QryNXDOMAIN>58534</QryNXDOMAIN>
+                <QryRecursion>0</QryRecursion>
+                <QryDuplicate>0</QryDuplicate>
+                <QryDropped>0</QryDropped>
+                <QryFailure>0</QryFailure>
+                <XfrReqDone>0</XfrReqDone>
+                <UpdateReqFwd>0</UpdateReqFwd>
+                <UpdateRespFwd>0</UpdateRespFwd>
+                <UpdateFwdFail>0</UpdateFwdFail>
+                <UpdateDone>167</UpdateDone>
+                <UpdateFail>0</UpdateFail>
+                <UpdateBadPrereq>0</UpdateBadPrereq>
+              </counters>
+            </zone>
+            <zone>
               <name>127.in-addr.arpa/IN</name>
               <rdataclass>IN</rdataclass>
               <serial>1</serial>
