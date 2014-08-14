@@ -133,7 +133,8 @@ class XmlV22(XmlAbstract):
         for view in views:
             view_name = view.find('name').string
             for zone in view.findAll('zone'):
-                zone_name, zone_class = zone.find('name').string.split('/')
+                zone_name = zone.find('name').string.split('/',1)[0]
+                zone_class = zone.find('rdataclass').string
                 if zone_class != 'IN':
                     continue
                 serial = int(zone.find('serial').string)
