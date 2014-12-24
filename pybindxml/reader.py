@@ -53,6 +53,8 @@ class BindXmlReader(object):
             self.stats = XmlV30(self.bs_xml)
         elif self.xml_version == '3.3':
             self.stats = XmlV33(self.bs_xml)
+        elif self.xml_version == '3.5':
+            self.stats = XmlV35(self.bs_xml)
         else:
             raise XmlError('Support must be added before being able to support newly-encountered XML version %s.' % self.xml_version)
 
@@ -210,3 +212,19 @@ class XmlV33(XmlV30):
     """Class for implementing methods for parsing BIND version 3.3 XML."""
     def __init__(self, xml):
         super(XmlV33, self).__init__(xml)
+
+class XmlV35(XmlV30):
+    """Class for implementing methods for parsing BIND version 3.5 XML."""
+    def __init__(self, xml):
+        super(XmlV35, self).__init__(xml)
+
+    def set_query_stats(self):
+        stats_dict = {}
+        counter_stats = self.bs_xml.find('server').find_all('counters')
+        for counter_group in counter_stats:
+            # counter_type currently unused
+            counter_type = counter_group['type']
+            for counter in counter_group.find_all('counter'):
+                stats_dict[counter['name']] = int(counter.string)
+
+        return stats_dict
