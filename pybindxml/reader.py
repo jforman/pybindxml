@@ -139,7 +139,7 @@ class XmlV22(XmlAbstract):
                 zone_class = zone.find('rdataclass').string
                 if zone_class != 'IN':
                     continue
-                serial = int(zone.find('serial').string)
+                serial = zone.find('serial').string
                 zone_dict[zone_name] = {}
                 zone_dict[zone_name][view_name] = {}
                 zone_dict[zone_name][view_name].update({
@@ -195,7 +195,7 @@ class XmlV30(XmlAbstract):
                 zone_dict[zone['name']] = {}
                 zone_dict[zone['name']][view['name']] = {}
                 zone_dict[zone['name']][view['name']].update({
-                        'serial': int(zone.find('serial').string)
+                        'serial': zone.find('serial').string
                         })
                 for counter_type in zone.find_all('counters'):
                     # rcode, qtype, etc.
