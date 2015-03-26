@@ -146,14 +146,16 @@ class XmlV22(XmlAbstract):
                         'serial': serial,
                         })
                 counters = zone.find('counters')
-                for counter in counters.children:
-                    if counter == u'\n':
-                        continue
-                    zone_dict[zone_name][view_name][counter.name] = {}
-                    zone_dict[zone_name][view_name][counter.name].update({
+                if counters:
+                    for counter in counters.children:
+                        if counter == u'\n':
+                            continue
+                        zone_dict[zone_name][view_name][counter.name] = {}
+                        zone_dict[zone_name][view_name][counter.name].update({
                             'type': None,
                             'value': int(counter.string)})
         return zone_dict
+
 
 class XmlV30(XmlAbstract):
     """Class for implementing methods for parsing BIND version 3.0 XML."""
@@ -197,12 +199,14 @@ class XmlV30(XmlAbstract):
                 zone_dict[zone['name']][view['name']].update({
                         'serial': zone.find('serial').string
                         })
-                for counter_type in zone.find_all('counters'):
-                    # rcode, qtype, etc.
-                    for counter in counter_type.find_all('counter'):
-                        # UpdateDone, PTR, etc.
-                        zone_dict[zone['name']][view['name']][counter['name']] = {}
-                        zone_dict[zone['name']][view['name']][counter['name']].update({
+                counters = zone.find_all('counters')
+                if counters:
+                    for counter_type in counters:
+                        # rcode, qtype, etc.
+                        for counter in counter_type.find_all('counter'):
+                            # UpdateDone, PTR, etc.
+                            zone_dict[zone['name']][view['name']][counter['name']] = {}
+                            zone_dict[zone['name']][view['name']][counter['name']].update({
                                 'type': counter_type['type'],
                                 'value': int(counter.string)})
         return zone_dict
@@ -212,6 +216,7 @@ class XmlV33(XmlV30):
     """Class for implementing methods for parsing BIND version 3.3 XML."""
     def __init__(self, xml):
         super(XmlV33, self).__init__(xml)
+
 
 class XmlV35(XmlV30):
     """Class for implementing methods for parsing BIND version 3.5 XML."""
