@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 from pybindxml import reader
 import argparse
 
@@ -23,10 +24,10 @@ def main():
 
     mybind.get_stats()
 
-    print "memory stats: %s" % mybind.stats.memory_stats
-    print "query stats: %s" % mybind.stats.query_stats
-    print "zone list: %s" % mybind.stats.zone_stats
-    print "done"
+    print("memory stats: %s" % mybind.stats.memory_stats)
+    print("query stats: %s" % mybind.stats.query_stats)
+    print("zone list: %s" % mybind.stats.zone_stats)
+    print("done")
 
 if __name__ == '__main__':
     main()
