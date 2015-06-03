@@ -1,7 +1,13 @@
 """ Library to parse the various versions of BIND statstics XML."""
 
 from bs4 import BeautifulSoup
-import urllib2
+try:
+    from urllib.request import urlopen
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import urlopen
+    from urllib2 import URLError
+
 
 class XmlError(Exception):
     """ Base class of raising XML errors when reading BIND XML."""
@@ -32,10 +38,10 @@ class BindXmlReader(object):
             self.bs_xml = BeautifulSoup(self.raw_xml)
         else:
             try:
-                req = urllib2.urlopen('http://%s:%s' % (self.host, self.port))
+                req = urlopen('http://%s:%s' % (self.host, self.port))
                 self.raw_xml = req.read()
                 self.bs_xml = BeautifulSoup(self.raw_xml, 'xml')
-            except urllib2.URLError, u_error:
+            except URLError as u_error:
                 raise XmlError('Unable to query BIND (%s:%s) for statistics. Reason: %s.' %
                                (self.host, self.port, u_error))
 
@@ -105,7 +111,7 @@ class XmlV22(XmlAbstract):
         stats_dict = {}
         stats = self.bs_xml.find('bind').find('statistics').find('memory').find('summary')
         for stat in stats.contents:
-            if stat == u'\n':
+            if stat == '\n':
                 continue
             if stat:
                 stats_dict[stat.name] = int(stat.string)
@@ -116,13 +122,13 @@ class XmlV22(XmlAbstract):
         stats_dict = {}
         stats = self.bs_xml.find('server')
         for stat in stats.find_all('opcode'):
-            if stat == u'\n':
+            if stat == '\n':
                 continue
             if stat:
                 stats_dict[stat.find('name').string] = int(stat.find('counter').string)
 
         for stat in stats.find('queries-in').find_all('rdtype'):
-            if stat == u'\n':
+            if stat == '\n':
                 continue
             if stat:
                 stats_dict[stat.find('name').string] = int(stat.find('counter').string)
@@ -148,7 +154,7 @@ class XmlV22(XmlAbstract):
                 counters = zone.find('counters')
                 if counters:
                     for counter in counters.children:
-                        if counter == u'\n':
+                        if counter == '\n':
                             continue
                         zone_dict[zone_name][view_name][counter.name] = {}
                         zone_dict[zone_name][view_name][counter.name].update({
@@ -166,7 +172,7 @@ class XmlV30(XmlAbstract):
         stats_dict = {}
         stats = self.bs_xml.find('memory').find('summary')
         for stat in stats.contents:
-            if stat == u'\n':
+            if stat == '\n':
                 continue
             if stat:
                 stats_dict[stat.name] = int(stat.string)
@@ -177,11 +183,11 @@ class XmlV30(XmlAbstract):
         stats_dict = {}
         stats = self.bs_xml.find('server')
         for stat in stats.find(type='qtype'):
-            if stat == u'\n':
+            if stat == '\n':
                 continue
             stats_dict[stat['name']] = int(stat.string)
         for stat in stats.find(type='opcode'):
-            if stat == u'\n':
+            if stat == '\n':
                 continue
             stats_dict[stat['name']] = int(stat.string)
 
