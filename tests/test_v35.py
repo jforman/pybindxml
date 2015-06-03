@@ -18,7 +18,7 @@ class Tests_v35(unittest.TestCase):
     def test_ZoneStats(self):
         """Ensure we can read various levels of stats for a particular zone."""
         dom1 = self.xml_obj.stats.zone_stats['2.10.10.in-addr.arpa']
-        self.assertEqual(dom1['_default']['serial'], 10)
+        self.assertEqual(dom1['_default']['serial'], '10')
         self.assertEqual(dom1['_default']['QrySuccess']['value'], 4)
 
     def test_MemoryStats(self):
