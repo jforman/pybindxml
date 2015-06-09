@@ -1,6 +1,8 @@
 py-bindxml
 ==========
 
+[![Build Status](https://travis-ci.org/jforman/pybindxml.svg?branch=master)](https://travis-ci.org/jforman/pybindxml)
+
 Library to handle parsing BIND statistics XML into Python objects.
 
 Data Structure
