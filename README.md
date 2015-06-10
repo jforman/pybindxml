@@ -38,7 +38,7 @@ Typical Usage
 -------------
 ```
 >>> from pybindxml import reader
->>> foo = reader.BindXMLReader(host='mybindhost')
+>>> foo = reader.BindXmlReader(host='mybindhost')
 >>> foo.get_stats()
 >>> foo.stats.query_stats
 {u'A': 1625230, u'SOA': 300, u'DS': 38, u'UPDATE': 50, u'MX': 4, u'AAAA': 1115994, u'DNSKEY': 38, u'QUERY': 2750728, u'TXT': 46, u'PTR': 9078}
