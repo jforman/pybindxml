@@ -1,4 +1,4 @@
-""" Library to parse the various versions of BIND statstics XML."""
+"""Library to parse the various versions of BIND statstics XML."""
 
 from bs4 import BeautifulSoup
 try:
@@ -10,7 +10,9 @@ except ImportError:
 
 
 class XmlError(Exception):
-    """ Base class of raising XML errors when reading BIND XML."""
+
+    """Base class of raising XML errors when reading BIND XML."""
+
     def __init__(self, value):
         self.value = value
     def __str__(self):
@@ -18,6 +20,7 @@ class XmlError(Exception):
 
 
 class BindXmlReader(object):
+
     """Superclass for reading/processing BIND statistics XML."""
 
     def __init__(self, host=None, port=8053, xml_filepath=None):
@@ -30,8 +33,10 @@ class BindXmlReader(object):
         self.xml_version = None
 
     def gather_xml(self):
-        """ Attempt to read the XML, whether from a file on-disk or via host:port."""
-        # TODO: handle when you cant gather stats, due to bad hostname
+        """Attempt to read the XML, whether from a file on-disk or via host:port.
+
+        TODO: handle when you cant gather stats, due to bad hostname
+        """
         if self.xml_filepath:
             with open(self.xml_filepath, "r") as xml_fh:
                 self.raw_xml = xml_fh.read()
@@ -46,7 +51,7 @@ class BindXmlReader(object):
                                (self.host, self.port, u_error))
 
     def get_stats(self):
-        """ Given XML version, parse create XMLAbstract object and sets xml_stats attribute."""
+        """Given XML version, parse create XMLAbstract object and sets xml_stats attribute."""
         self.gather_xml()
         self.xml_version = self.bs_xml.find('statistics')['version']
         
@@ -66,7 +71,9 @@ class BindXmlReader(object):
 
 
 class XmlAbstract(object):
-    """ Abstract class for the various XML versions to be parsed. """
+
+    """Abstract class for the various XML versions to be parsed."""
+
     def __init__(self, xml):
         self.bs_xml = xml
         self.memory_stats = self.set_memory_stats()
@@ -74,7 +81,7 @@ class XmlAbstract(object):
         self.zone_stats = self.set_zone_stats()
 
     def set_memory_stats(self):
-        """ Return dict of memory counter and value for BIND process.
+        """Return dict of memory counter and value for BIND process.
 
         Returns:
         Dict { memory_counter: Int value in bytes }
@@ -82,7 +89,7 @@ class XmlAbstract(object):
         raise NotImplementedError('You must implement your own set_memory_stats method.')
 
     def set_query_stats(self):
-        """ Return a dict of query type and count from BIND statistics XML.
+        """Return a dict of query type and count from BIND statistics XML.
 
         Returns:
         Dict { query_type: Integer count }
@@ -90,7 +97,7 @@ class XmlAbstract(object):
         raise NotImplementedError('You must implement your own set_query_stats method.')
 
     def set_zone_stats(self):
-        """ List the DNS zones and attributes.
+        """List the DNS zones and attributes.
 
         Returns:
         List of Dicts { String view_name,
@@ -103,7 +110,9 @@ class XmlAbstract(object):
 
 
 class XmlV22(XmlAbstract):
+
     """Class for implementing methods for parsing BIND version 2.2 XML."""
+
     def __init__(self, xml):
         super(XmlV22, self).__init__(xml)
 
@@ -164,7 +173,9 @@ class XmlV22(XmlAbstract):
 
 
 class XmlV30(XmlAbstract):
+
     """Class for implementing methods for parsing BIND version 3.0 XML."""
+
     def __init__(self, xml):
         super(XmlV30, self).__init__(xml)
 
@@ -219,13 +230,17 @@ class XmlV30(XmlAbstract):
 
 
 class XmlV33(XmlV30):
+
     """Class for implementing methods for parsing BIND version 3.3 XML."""
+
     def __init__(self, xml):
         super(XmlV33, self).__init__(xml)
 
 
 class XmlV35(XmlV30):
+
     """Class for implementing methods for parsing BIND version 3.5 XML."""
+
     def __init__(self, xml):
         super(XmlV35, self).__init__(xml)
 
