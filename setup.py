@@ -9,5 +9,5 @@ setup(
     license='MIT',
     packages = ['pybindxml'],
     url = 'http:://github.com/jforman/pybindxml',
-    install_requires = ['beautifulsoup4', 'lxml'],
+    install_requires = ['beautifulsoup4'],
 )
