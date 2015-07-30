@@ -2,6 +2,7 @@ py-bindxml
 ==========
 
 [![Build Status](https://travis-ci.org/jforman/pybindxml.svg?branch=master)](https://travis-ci.org/jforman/pybindxml)
+[![Code Health](https://landscape.io/github/jforman/pybindxml/master/landscape.svg?style=flat)](https://landscape.io/github/jforman/pybindxml/master)
 
 Library to handle parsing BIND statistics XML into Python objects.
 
