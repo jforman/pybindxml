@@ -10,7 +10,6 @@ except ImportError:
 
 
 class XmlError(Exception):
-
     """Base class of raising XML errors when reading BIND XML."""
 
     def __init__(self, value):
@@ -20,7 +19,6 @@ class XmlError(Exception):
 
 
 class BindXmlReader(object):
-
     """Superclass for reading/processing BIND statistics XML."""
 
     def __init__(self, host=None, port=8053, xml_filepath=None):
@@ -71,7 +69,6 @@ class BindXmlReader(object):
 
 
 class XmlAbstract(object):
-
     """Abstract class for the various XML versions to be parsed."""
 
     def __init__(self, xml):
@@ -110,7 +107,6 @@ class XmlAbstract(object):
 
 
 class XmlV22(XmlAbstract):
-
     """Class for implementing methods for parsing BIND version 2.2 XML."""
 
     def __init__(self, xml):
@@ -173,7 +169,6 @@ class XmlV22(XmlAbstract):
 
 
 class XmlV30(XmlAbstract):
-
     """Class for implementing methods for parsing BIND version 3.0 XML."""
 
     def __init__(self, xml):
@@ -230,7 +225,6 @@ class XmlV30(XmlAbstract):
 
 
 class XmlV33(XmlV30):
-
     """Class for implementing methods for parsing BIND version 3.3 XML."""
 
     def __init__(self, xml):
@@ -238,7 +232,6 @@ class XmlV33(XmlV30):
 
 
 class XmlV35(XmlV30):
-
     """Class for implementing methods for parsing BIND version 3.5 XML."""
 
     def __init__(self, xml):
