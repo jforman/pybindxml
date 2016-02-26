@@ -1,5 +1,7 @@
+*~
 *.deb
 *.pyc
 *.tar.gz
 build/
-*~
+dist/
+pybindxml.egg-info/
