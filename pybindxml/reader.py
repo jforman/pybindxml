@@ -58,6 +58,9 @@ class BindXmlReader(object):
 
         if self.xml_version == '3.6':
             self.stats = XmlV36(self.bs_xml)
+        elif self.xml_version == '3.8':
+            # 3.8 uses the same XML scheme as 3.6
+            self.stats = XmlV36(self.bs_xml)
         else:
             raise XmlError('Support must be added before being able to support newly-encountered XML version %s.' % self.xml_version)
 
