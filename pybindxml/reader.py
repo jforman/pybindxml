@@ -52,17 +52,11 @@ class BindXmlReader(object):
         """Given XML version, parse create XMLAbstract object and sets xml_stats attribute."""
         self.gather_xml()
         self.xml_version = self.bs_xml.find('statistics')['version']
-        
+
         if self.xml_version is None:
             raise XmlError("Unable to determine XML version via 'statistics' tag.")
 
-        if self.xml_version == '3.0':
-            self.stats = XmlV30(self.bs_xml)
-        elif self.xml_version == '3.3':
-            self.stats = XmlV33(self.bs_xml)
-        elif self.xml_version == '3.5':
-            self.stats = XmlV35(self.bs_xml)
-        elif self.xml_version == '3.6':
+        if self.xml_version == '3.6':
             self.stats = XmlV36(self.bs_xml)
         else:
             raise XmlError('Support must be added before being able to support newly-encountered XML version %s.' % self.xml_version)
@@ -106,11 +100,11 @@ class XmlAbstract(object):
         raise NotImplementedError('You must implement your own set_zone_stats method.')
 
 
-class XmlV30(XmlAbstract):
-    """Class for implementing methods for parsing BIND version 3.0 XML."""
+class XmlV36(XmlAbstract):
+    """Class for implementing methods for parsing BIND version 3.5 XML."""
 
     def __init__(self, xml):
-        super(XmlV30, self).__init__(xml)
+        super(XmlV36, self).__init__(xml)
 
     def set_memory_stats(self):
         stats_dict = {}
@@ -125,15 +119,12 @@ class XmlV30(XmlAbstract):
 
     def set_query_stats(self):
         stats_dict = {}
-        stats = self.bs_xml.find('server')
-        for stat in stats.find(type='qtype'):
-            if stat == '\n':
-                continue
-            stats_dict[stat['name']] = int(stat.string)
-        for stat in stats.find(type='opcode'):
-            if stat == '\n':
-                continue
-            stats_dict[stat['name']] = int(stat.string)
+        counter_stats = self.bs_xml.find('server').find_all('counters')
+        for counter_group in counter_stats:
+            # counter_type currently unused
+            counter_type = counter_group['type']
+            for counter in counter_group.find_all('counter'):
+                stats_dict[counter['name']] = int(counter.string)
 
         return stats_dict
 
@@ -160,45 +151,3 @@ class XmlV30(XmlAbstract):
                                 'type': counter_type['type'],
                                 'value': int(counter.string)})
         return zone_dict
-
-
-class XmlV33(XmlV30):
-    """Class for implementing methods for parsing BIND version 3.3 XML."""
-
-    def __init__(self, xml):
-        super(XmlV33, self).__init__(xml)
-
-
-class XmlV35(XmlV30):
-    """Class for implementing methods for parsing BIND version 3.5 XML."""
-
-    def __init__(self, xml):
-        super(XmlV35, self).__init__(xml)
-
-    def set_query_stats(self):
-        stats_dict = {}
-        counter_stats = self.bs_xml.find('server').find_all('counters')
-        for counter_group in counter_stats:
-            # counter_type currently unused
-            counter_type = counter_group['type']
-            for counter in counter_group.find_all('counter'):
-                stats_dict[counter['name']] = int(counter.string)
-
-        return stats_dict
-
-class XmlV36(XmlV30):
-    """Class for implementing methods for parsing BIND version 3.5 XML."""
-
-    def __init__(self, xml):
-        super(XmlV36, self).__init__(xml)
-
-    def set_query_stats(self):
-        stats_dict = {}
-        counter_stats = self.bs_xml.find('server').find_all('counters')
-        for counter_group in counter_stats:
-            # counter_type currently unused
-            counter_type = counter_group['type']
-            for counter in counter_group.find_all('counter'):
-                stats_dict[counter['name']] = int(counter.string)
-
-        return stats_dict
