@@ -1,4 +1,5 @@
 #!/bin/bash
 
-/usr/bin/python setup.py bdist_wheel
-twine update dist/*
+rm -rf dist/
+/usr/bin/python setup.py build bdist
+twine upload dist/*
