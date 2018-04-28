@@ -1,3 +1,4 @@
 #!/bin/bash
 
-/usr/bin/python setup.py sdist bdist_wheel upload
+/usr/bin/python setup.py bdist_wheel
+twine update dist/*
