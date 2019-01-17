@@ -61,6 +61,9 @@ class BindXmlReader(object):
         elif self.xml_version == '3.8':
             # 3.8 uses the same XML scheme as 3.6
             self.stats = XmlV36(self.bs_xml)
+        elif self.xml_version == '3.11':
+            # BIND 9.12 uses same XML schema as XmlV36
+            self.stats = XmlV36(self.bs_xml)
         else:
             raise XmlError('Support must be added before being able to support newly-encountered XML version %s.' % self.xml_version)
 
@@ -104,7 +107,7 @@ class XmlAbstract(object):
 
 
 class XmlV36(XmlAbstract):
-    """Class for implementing methods for parsing BIND version 3.5 XML."""
+    """Class for implementing methods for parsing BIND version 3.6,3.8,3.11 XML."""
 
     def __init__(self, xml):
         super(XmlV36, self).__init__(xml)
